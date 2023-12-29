@@ -178,6 +178,10 @@ class ChessVar:
         :param end_point: end point of the piece
         :return:True or False if move is Valid or Invalid
         """
+
+        if self._game_state != "UNFINISHED":
+            return False
+
         # If is_valid, refresh board(start_point, end_point)
         _start_row = int(start_point[1]) - 1  # Convert row number to integer
         _start_col = ord(start_point[0]) - ord('a')  # Convert column letter to integer
@@ -186,38 +190,41 @@ class ChessVar:
 
         piece = self._game_board.get_piece(_start_row, _start_col)
 
-        if piece and piece.is_valid_move(_start_row, _start_col, _end_row, _end_col,
-                                         self._game_board):  # Check if the move is valid
-            captured_piece = self._game_board.get_piece(_end_row, _end_col)  # capture the piece
-            self._game_board.set_piece(_end_row, _end_col, piece)  # move the piece
-            self._game_board.set_piece(_start_row, _start_col, ".")
+        if piece and piece._color == self._current_player:
 
-            if captured_piece and captured_piece is not None:  # Check if there is a piece at the end point
-                self._game_board.captured_pieces[self._current_player].append(captured_piece)
+            if piece and piece.is_valid_move(_start_row, _start_col, _end_row, _end_col,
+                                             self._game_board):  # Check if the move is valid
+                captured_piece = self._game_board.get_piece(_end_row, _end_col)  # capture the piece
+                self._game_board.set_piece(_end_row, _end_col, piece)  # move the piece
+                self._game_board.set_piece(_start_row, _start_col, ".")
 
-            current_state = "\n".join([" ".join(str(piece) for piece in row) for row in self._game_board._board])
-            self._move_history.append(current_state)
-            self._game_board.refresh_Board(start_point, end_point)
+                if captured_piece and captured_piece is not None:  # Check if there is a piece at the end point
+                    self._game_board.captured_pieces[self._current_player].append(captured_piece)
 
-            self._current_turn += 1  # Increment the turn number
+                current_state = "\n".join([" ".join(str(piece) for piece in row) for row in self._game_board._board])
+                self._move_history.append(current_state)
+                self._game_board.refresh_Board(start_point, end_point)
 
-            # Determine the current player based on the turn number
+                self._current_turn += 1  # Increment the turn number
+
+                # Determine the current player based on the turn number
+                self._current_player = "WHITE" if self._current_turn % 2 == 1 else "BLACK"
+
+                for color in ["WHITE", "BLACK"]:
+                    piece_count = {'p': 8, 'r': 2, 'n': 2, 'b': 2, 'q': 1, 'k': 1}  # set the amount of pieces
+
+                    for piece_type, count in piece_count.items():
+                        captured_count = len(
+                            [p for p in self._game_board.captured_pieces[color] if str(p).lower() == piece_type])
+
+                        if captured_count == count:
+                            self._game_state = "WHITE_WON" if color == "WHITE" else "BLACK_WON"
+                            return True  # Game is over
+
+                return True  # Valid move, game is not over
+
             self._current_player = "WHITE" if self._current_turn % 2 == 1 else "BLACK"
-
-            for color in ["WHITE", "BLACK"]:
-                piece_count = {'p': 8, 'r': 2, 'n': 2, 'b': 2, 'q': 1, 'k': 1}  # set the amount of pieces
-
-                for piece_type, count in piece_count.items():
-                    captured_count = len(
-                        [p for p in self._game_board.captured_pieces[color] if str(p).lower() == piece_type])
-
-                    if captured_count == count:
-                        self._game_state = "WHITE_WON" if color == "WHITE" else "BLACK_WON"
-                        return True  # Game is over
-
-            return True  # Valid move, game is not over
-
-        return False  # Invalid move, game is not over
+            return False  # Invalid move, game is not over
 
 
 class ChessPiece:
@@ -448,14 +455,13 @@ class Bishop(ChessPiece):
 
         row_dir = 1 if start_row < end_row else -1  # Check if the piece is moving up or down
         col_dir = 1 if start_col < end_col else -1  # Check if the piece is moving left or right
-        row, col = start_row + row_dir, start_col + col_dir
+        row, col = start_row + row_dir, start_col + col_dir  # move the piece
 
-        while row != end_row and col != end_col:
+        while row != end_row and col != end_col:  #
             if game_board.get_piece(row, col) is not None:
                 return False  # there are pieces in the way
             row += row_dir  # move the piece
             col += col_dir  # move the piece
-
         return True
 
 
@@ -498,7 +504,7 @@ class Queen(ChessPiece):
 
         while row != end_row and col != end_col:  # Check if there are pieces in the way
             if end_piece is not None:
-                return True
+                return False
 
             row += row_dir  # move the piece
             col += col_dir  # move the piece
@@ -540,14 +546,16 @@ class King(ChessPiece):
 
 # Test the game board
 
-# game = ChessVar()
-# game._game_board.show_board()
-#
+game = ChessVar()
+game._game_board.show_board()
+
 # # Test a couple of moves
-# game.make_move("e2", "e4")
-# game._game_board.show_board()
-# game.make_move("e7", "e5")
-# game._game_board.show_board()
+game.make_move("e2", "e4")
+game._game_board.show_board()
+game.make_move("e7", "e5")
+game._game_board.show_board()
+game.make_move("a7",'a5')
+game._game_board.show_board()
 
 # Test the game state
 # print("Test game state:", game.get_game_state())
