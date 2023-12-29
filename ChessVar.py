@@ -272,6 +272,9 @@ class Pawn(ChessPiece):
             if start_row == end_row - 2 and start_col == end_col and middle_piece is None:
                 return True
 
+            elif start_row == end_row - 1 and start_col == end_col and end_piece._color == "BLACK":
+                return False
+
             elif start_row == end_row - 1 and start_col == end_col and end_piece is None:
                 return True
 
@@ -285,6 +288,9 @@ class Pawn(ChessPiece):
             # Check if the piece is moving forward two spaces on its first turn and the space is empty
             if start_row == end_row + 2 and start_col == end_col and middle_piece is None:
                 return True
+
+            elif start_row == end_row + 1 and start_col == end_col and end_piece._color == "WHITE":
+                return False
 
             elif start_row == end_row + 1 and start_col == end_col and end_piece is None:
                 return True
