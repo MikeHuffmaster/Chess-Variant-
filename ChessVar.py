@@ -1,10 +1,10 @@
 # Name: Mike Huffmaster
 # Github: MikeHuffmaster
 # Date: 12/9/2023
-# Desription:  THis program is a variant of chess that follows the movement of a chess game, but does not include
+# Description:  This program is a variant of chess that follows the movement of a chess game, but does not include
 #              the rules for check or checkmate.  This program also does not include the rules for castling, en passant,
 #              or pawn promotion.  The winner is declared when all pieces of one type are captured. For example, if all
-#              of the black pawns are captured, then white wins the game.
+#              the black pawns are captured, then white wins the game.
 import copy
 import string
 
@@ -511,6 +511,7 @@ class Queen(ChessPiece):
 
         return True
 
+
 class King(ChessPiece):
     """
     Creates the king piece and its attributes
@@ -554,7 +555,7 @@ game.make_move("e2", "e4")
 game._game_board.show_board()
 game.make_move("e7", "e5")
 game._game_board.show_board()
-game.make_move("a7",'a5')
+game.make_move("a7", 'a5')
 game._game_board.show_board()
 
 # Test the game state
@@ -569,7 +570,6 @@ game._game_board.show_board()
 # game._game_board.show_board()
 # game.make_move("e4", "d5")
 # game._game_board.show_board()
-
 
 
 # Test turn order
