@@ -58,5 +58,6 @@ game.make_move("e7", "e5")
 game.show_board()
 
 
-
+```
+Feel free to explore the code and contribute to the development!
 
