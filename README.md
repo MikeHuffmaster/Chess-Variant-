@@ -36,11 +36,10 @@ The code is organized into three main classes:
 
 3. **ChessPiece and its subclasses (Pawn, Rook, Knight, Bishop, Queen, King):** Define the attributes and movements for each type of chess piece.
 
-##Testing
-
-The code includes examples of testing various aspects of the game, such as normal movement, captures, turn order, and winning conditions for both black and white.
 
 ## Example testing
+
+The code includes examples of testing various aspects of the game, such as normal movement, captures, turn order, and winning conditions for both black and white.
 ```python
 game.make_move("e2", "e4")
 game.make_move("d7", "d5")
