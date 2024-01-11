@@ -46,7 +46,7 @@ game.make_move("d7", "d5")
 game.show_board()
 print("Game State:", game.get_game_state()
 ```
-Feel free to explore the code and contribute to the development!
+
 
 ## Usage
 
