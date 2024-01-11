@@ -41,11 +41,12 @@ The code is organized into three main classes:
 The code includes examples of testing various aspects of the game, such as normal movement, captures, turn order, and winning conditions for both black and white.
 
 ## Example testing
+```python
 game.make_move("e2", "e4")
 game.make_move("d7", "d5")
 game.show_board()
-print("Game State:", game.get_game_state())
-
+print("Game State:", game.get_game_state()
+```
 Feel free to explore the code and contribute to the development!
 
 ## Usage
