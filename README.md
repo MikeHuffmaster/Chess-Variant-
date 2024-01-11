@@ -56,7 +56,7 @@ game = ChessVar()
 game.make_move("e2", "e4")
 game.make_move("e7", "e5")
 game.show_board()
-'''
+
 
 
 
