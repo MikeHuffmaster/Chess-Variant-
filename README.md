@@ -36,15 +36,6 @@ The code is organized into three main classes:
 
 3. **ChessPiece and its subclasses (Pawn, Rook, Knight, Bishop, Queen, King):** Define the attributes and movements for each type of chess piece.
 
-## Usage
-
-```python
-# Example usage
-game = ChessVar()
-game.make_move("e2", "e4")
-game.make_move("e7", "e5")
-game.show_board()
-
 ##Testing
 
 The code includes examples of testing various aspects of the game, such as normal movement, captures, turn order, and winning conditions for both black and white.
@@ -56,4 +47,16 @@ game.show_board()
 print("Game State:", game.get_game_state())
 
 Feel free to explore the code and contribute to the development!
+
+## Usage
+
+```python
+# Example usage
+game = ChessVar()
+game.make_move("e2", "e4")
+game.make_move("e7", "e5")
+game.show_board()
+'''
+
+
 
