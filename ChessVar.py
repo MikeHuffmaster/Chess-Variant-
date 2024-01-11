@@ -16,6 +16,7 @@ class GameBoard:
 
     def __init__(self):
 
+        self._board = None
         self._initial_board = [[''] * 8 for _ in range(8)]
         self._captured_pieces = {'WHITE': [], "BLACK": []}  # Keeps track of captured pieces
         self._move_history = []  # Saves the current state of the board after each move
@@ -108,7 +109,7 @@ class GameBoard:
         """
         self._board[row][col] = piece
 
-    def refresh_Board(self, start_point, end_point):
+    def refresh_board(self, start_point, end_point):
         """
         refreshes the board to the updated version
         :param start_point: the square the piece starts on
@@ -190,7 +191,7 @@ class ChessVar:
 
         piece = self._game_board.get_piece(_start_row, _start_col)
 
-        if piece and piece._color == self._current_player:
+        if piece and piece.get_color == self._current_player:
 
             if piece and piece.is_valid_move(_start_row, _start_col, _end_row, _end_col,
                                              self._game_board):  # Check if the move is valid
@@ -238,8 +239,15 @@ class ChessPiece:
         :param color: the color of the piece
         :param piece_type: the type of piece
         """
-        self._color = color
+        self.get_color = color
         self._piece_type = piece_type
+
+    def get_color(self):
+        """
+        Gets the color of the piece
+        :return: color of the piece
+        """
+        return self.get_color
 
 
 class Pawn(ChessPiece):
@@ -251,7 +259,7 @@ class Pawn(ChessPiece):
         super().__init__(color, piece_type="Pawn")
 
     def __str__(self):
-        return "P" if self._color == "WHITE" else "p"  # string representation of the piece
+        return "P" if self.get_color == "WHITE" else "p"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
 
@@ -269,17 +277,17 @@ class Pawn(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)  # get the piece at the end point
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
-        if self._color == "WHITE":
+        if self.get_color == "WHITE":
             middle_piece = game_board.get_piece(2, start_col)
 
             # Check if the piece is moving forward two spaces on its first turn and the space is empty
             if start_row == end_row - 2 and start_col == end_col and middle_piece is None:
                 return True
 
-            elif start_row == end_row - 1 and start_col == end_col and end_piece._color == "BLACK":
+            elif start_row == end_row - 1 and start_col == end_col and end_piece.get_color == "BLACK":
                 return False
 
             elif start_row == end_row - 1 and start_col == end_col and end_piece is None:
@@ -287,16 +295,16 @@ class Pawn(ChessPiece):
 
             # Check if the piece is moving diagonally to capture a piece
             elif end_row == start_row + 1 and (end_col == start_col or abs(end_col - start_col) == 1):
-                return end_piece is not None and end_piece._color == "BLACK"
+                return end_piece is not None and end_piece.get_color == "BLACK"
 
-        elif self._color == "BLACK":
+        elif self.get_color == "BLACK":
             middle_piece = game_board.get_piece(5, start_col)
 
             # Check if the piece is moving forward two spaces on its first turn and the space is empty
             if start_row == end_row + 2 and start_col == end_col and middle_piece is None:
                 return True
 
-            elif start_row == end_row + 1 and start_col == end_col and end_piece._color == "WHITE":
+            elif start_row == end_row + 1 and start_col == end_col and end_piece.get_color == "WHITE":
                 return False
 
             elif start_row == end_row + 1 and start_col == end_col and end_piece is None:
@@ -304,7 +312,7 @@ class Pawn(ChessPiece):
 
             # Check if the piece is moving diagonally to capture a piece
             elif end_row == start_row - 1 and (end_col == start_col or abs(end_col - start_col) == 1):
-                return end_piece is not None and end_piece._color == "WHITE"
+                return end_piece is not None and end_piece.get_color == "WHITE"
 
         return False
 
@@ -318,7 +326,7 @@ class Rook(ChessPiece):
         super().__init__(color, piece_type="Rook")
 
     def __str__(self):
-        return "R" if self._color == "WHITE" else "r"  # string representation of the piece
+        return "R" if self.get_color == "WHITE" else "r"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
         """
@@ -336,7 +344,7 @@ class Rook(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
         if start_row == end_row:  # Check if the piece is moving horizontally
@@ -358,7 +366,7 @@ class Rook(ChessPiece):
         step = 1 if start_col < end_col else -1
         for col in range(start_col + step, end_col, step):
             current_piece = game_board.get_piece(row, col)
-            if current_piece is not None and current_piece._color == self._color:
+            if current_piece is not None and current_piece.get_color == self.get_color:
                 return False
         return True
 
@@ -374,7 +382,7 @@ class Rook(ChessPiece):
         step = 1 if start_row < end_row else -1
         for row in range(start_row + step, end_row, step):
             current_piece = game_board.get_piece(row, col)
-            if current_piece is not None and current_piece._color == self._color:
+            if current_piece is not None and current_piece.get_color == self.get_color:
                 return False
         return True
 
@@ -388,7 +396,7 @@ class Knight(ChessPiece):
         super().__init__(color, piece_type="Knight")
 
     def __str__(self):
-        return "N" if self._color == "WHITE" else "n"  # string representation of the piece
+        return "N" if self.get_color == "WHITE" else "n"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
         """
@@ -406,7 +414,7 @@ class Knight(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
         if start_row == end_row or start_col == end_col:  # Check if the piece is moving in a straight line
@@ -427,7 +435,7 @@ class Bishop(ChessPiece):
         super().__init__(color, piece_type="Bishop")
 
     def __str__(self):
-        return "B" if self._color == "WHITE" else "b"  # string representation of the piece
+        return "B" if self.get_color == "WHITE" else "b"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
         """
@@ -444,7 +452,7 @@ class Bishop(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
         if start_row == end_row or start_col == end_col:  # Check if the piece is moving in a straight line
@@ -474,7 +482,7 @@ class Queen(ChessPiece):
         super().__init__(color, piece_type="Queen")
 
     def __str__(self):
-        return "Q" if self._color == "WHITE" else "q"  # string representation of the piece
+        return "Q" if self.get_color == "WHITE" else "q"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
         """
@@ -491,7 +499,7 @@ class Queen(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
         if abs(start_row - end_row) != abs(start_col - end_col):
@@ -521,7 +529,7 @@ class King(ChessPiece):
         super().__init__(color, piece_type="King")
 
     def __str__(self):
-        return "K" if self._color == "WHITE" else "k"  # string representation of the piece
+        return "K" if self.get_color == "WHITE" else "k"  # string representation of the piece
 
     def is_valid_move(self, start_row, start_col, end_row, end_col, game_board):
         """
@@ -539,7 +547,7 @@ class King(ChessPiece):
 
         end_piece = game_board.get_piece(end_row, end_col)
 
-        if end_piece and end_piece._color == self._color:
+        if end_piece and end_piece.get_color == self.get_color:
             return False  # Check if the piece is moving to a square with a piece of the same color
 
         return abs(start_row - end_row) <= 1 and abs(start_col - end_col) <= 1  # Check if the piece is moving one space
@@ -547,16 +555,18 @@ class King(ChessPiece):
 
 # Test the game board
 
-game = ChessVar()
-game._game_board.show_board()
-
-# # Test a couple of moves
-game.make_move("e2", "e4")
-game._game_board.show_board()
-game.make_move("e7", "e5")
-game._game_board.show_board()
-game.make_move("a7", 'a5')
-game._game_board.show_board()
+# game = ChessVar()
+# game._game_board.show_board()
+#
+# # # Test a couple of moves
+# game.make_move("e2", "e4")
+# game._game_board.show_board()
+# game.make_move("e7", "e5")
+# game._game_board.show_board()
+# game.make_move("a7", 'a5')
+# game._game_board.show_board()
+# game.make_move("a4", 'a5')
+# game._game_board.show_board()
 
 # Test the game state
 # print("Test game state:", game.get_game_state())
